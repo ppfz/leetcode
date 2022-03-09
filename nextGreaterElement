@@ -34,14 +34,11 @@ class Solution {
 				maxHeap.add(bar);
 			} else {
 				// can find greater number
-				prefix = String.valueOf(n); // digits on the left stay
+				prefix = n == 0 ? "" : String.valueOf(n); // digits on the left stay
 				break;
 			}
 		}
-
-		if (prefix.startsWith("0")) {
-			prefix = prefix.substring(1);
-		}
+        
 		if (prefix.equals(S))
 			return NOT_FOUND;
 
