@@ -1,0 +1,38 @@
+//https://leetcode-cn.com/problems/gas-station/solution/xiang-xi-tong-su-de-si-lu-fen-xi-duo-jie-fa-by--30/
+
+//O(n)
+// though looks like a two nested loops, essentially it's a two pointers solution: start pointer & current pointer
+//这个原创性更好，虽然啰嗦点，时间长点。
+
+class Solution {
+	public int canCompleteCircuit(int[] gas, int[] cost) {
+
+		final int IMPOSSIBLE = -1, N = gas.length;
+		int start = 0;  //index of the starting station
+		
+        while (start < N) {
+			int current = start; // index of the current station
+			// gas balance after fuelling up at current station
+			int balance = gas[current];
+            
+			while (balance >= cost[current]) { // can reach next station
+				int next = (current + 1) % N;
+				// balance at the next station
+				balance += -cost[current] + gas[next];
+				current = next;
+				if (current == start) { // completed the loop
+					return start;
+				}
+			}
+			// no need to check smaller starting positions again
+			if (current < start) {
+				return IMPOSSIBLE;
+			}
+			// two pointers: start and current 
+			start = current + 1;
+		}
+        
+		return IMPOSSIBLE;
+	}
+
+}
