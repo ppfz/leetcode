@@ -1,31 +1,54 @@
-boolean isPalindromePossible(String input) {
+//two pointer soltion O(n)
+
+public class Test {
+
+	String isPalindromePossible(String input) {
+		final String IMPOSSIBLE = "-1";
 		int left = 0, right = input.length() - 1;
-		boolean swaped = false;
+		String palindrome = "";
 
 		while (left < right) {
 			if (input.charAt(left) != input.charAt(right)) {
-				if (swaped) {
-					return false;
+				if (!palindrome.isEmpty()) {
+					return IMPOSSIBLE;
 				}
 				if (right - left == 1) {
-					return false;
+					return IMPOSSIBLE;
 				}
 				if (right - left == 2) {
 					char middle = input.charAt(left + 1);
-					return input.charAt(left) == middle || input.charAt(right) == middle;
-
+					if (input.charAt(left) == middle) {
+						palindrome = swap(right, right - 1, input);
+					} else if (input.charAt(right) == middle) {
+						palindrome = swap(left, left + 1, input);
+					} else {
+						return IMPOSSIBLE;
+					}
+				} else if (input.charAt(left + 1) != input.charAt(right)
+						&& input.charAt(left) != input.charAt(right - 1)) {
+					return IMPOSSIBLE;
+				} else {
+					palindrome = swap(right, right - 1, input);
 				}
-				if (input.charAt(left + 1) != input.charAt(right) && input.charAt(left) != input.charAt(right - 1)) {
-					return false;
-				}
-				swaped = true;
 				left++;
 				right--;
 			}
+
 			left++;
 			right--;
 		}
-		return swaped;
+		if (palindrome.isEmpty())
+			return IMPOSSIBLE;
+		return palindrome;
+
+	}
+
+	String swap(int i, int j, String s) {
+		StringBuffer sb = new StringBuffer(s);
+		Character c = sb.charAt(i);
+		sb.setCharAt(i, sb.charAt(j));
+		sb.setCharAt(j, c);
+		return sb.toString();
 	}
 
 	public static void main(String[] args) {
@@ -35,3 +58,5 @@ boolean isPalindromePossible(String input) {
 		System.out.println(o.isPalindromePossible("bdababd")); // true
 		System.out.println(o.isPalindromePossible("gcagac")); // false
 	}
+
+}
