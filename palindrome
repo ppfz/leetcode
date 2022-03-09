@@ -1,0 +1,37 @@
+boolean isPalindromePossible(String input) {
+		int left = 0, right = input.length() - 1;
+		boolean swaped = false;
+
+		while (left < right) {
+			if (input.charAt(left) != input.charAt(right)) {
+				if (swaped) {
+					return false;
+				}
+				if (right - left == 1) {
+					return false;
+				}
+				if (right - left == 2) {
+					char middle = input.charAt(left + 1);
+					return input.charAt(left) == middle || input.charAt(right) == middle;
+
+				}
+				if (input.charAt(left + 1) != input.charAt(right) && input.charAt(left) != input.charAt(right - 1)) {
+					return false;
+				}
+				swaped = true;
+				left++;
+				right--;
+			}
+			left++;
+			right--;
+		}
+		return swaped;
+	}
+
+	public static void main(String[] args) {
+		Test o = new Test();
+
+		System.out.println(o.isPalindromePossible("bbg")); // true
+		System.out.println(o.isPalindromePossible("bdababd")); // true
+		System.out.println(o.isPalindromePossible("gcagac")); // false
+	}
