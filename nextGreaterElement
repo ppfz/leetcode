@@ -1,0 +1,77 @@
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.PriorityQueue;
+
+/*以下写法比较复杂，有更简练的。
+但idea是是这样的：
+1，从后到前，以当前数字为基准，找它后面比它大的最小数（next greater num).
+2 如果有这个next greater num, 把next greater num放到当前位置来。或者和当前数swap.
+3. 保持前面的数字顺序不变，就是prefix。
+4. 这个位置后面的数字，按升序排列得到suffix。
+time = O(NlogN). N for N digits, logN for the operation of PQ. 
+additional space N to hold the PQ.
+*/
+
+class Solution {
+	public int nextGreaterElement(int n) {
+		final Integer NOT_FOUND = -1;
+		if (n >= Integer.MAX_VALUE || n < 12) {
+			return NOT_FOUND;
+		}
+
+		final String S = String.valueOf(n);
+		String prefix = S;
+		int bar = -1;
+		// put digits on the right of bar digit
+		PriorityQueue<Integer> maxHeap = new PriorityQueue<>((a, b) -> (b - a));
+
+		while (n > 0) {
+			bar = n % 10; // current digit
+			n = n / 10; // digits on the left stay
+			if (maxHeap.isEmpty() || maxHeap.peek() <= bar) {
+				// bar is largest to the right, cann't find greater number
+				maxHeap.add(bar);
+			} else {
+				// can find greater number
+				prefix = String.valueOf(n); // digits on the left stay
+				break;
+			}
+		}
+
+		if (prefix.startsWith("0")) {
+			prefix = prefix.substring(1);
+		}
+		if (prefix.equals(S))
+			return NOT_FOUND;
+
+		String result = prefix + getSuffix(bar, maxHeap);
+		if (isInteger(result)) {
+			return Integer.valueOf(result);
+		}
+		return NOT_FOUND;
+
+	}
+
+	private boolean isInteger(String num) {
+		return num.length() < String.valueOf(Integer.MAX_VALUE).length()
+				|| num.compareTo(String.valueOf(Integer.MAX_VALUE)) <= 0;
+	}
+
+	private String getSuffix(final int BAR, PriorityQueue<Integer> maxHeap) {
+		// the first digit in sb will be the next greater digit of BAR
+		// the remaining digits will be in ascending order
+		StringBuffer sb = new StringBuffer();
+		maxHeap.add(BAR);
+		while (!maxHeap.isEmpty()) {
+			int num = maxHeap.poll();
+			if (num > BAR) {
+				sb.insert(0, num);
+			} else {
+				sb.insert(1, num);
+			}
+		}
+		return sb.toString();
+	}
+
+}
